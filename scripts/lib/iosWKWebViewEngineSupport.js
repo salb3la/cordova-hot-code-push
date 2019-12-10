@@ -1,6 +1,7 @@
 /*
 Helper class to work with Swift.
 Mainly, it has only two method: to activate and to deactivate swift support in the project.
+Edited
 */
 
 var path = require('path');
