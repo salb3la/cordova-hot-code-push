@@ -73,16 +73,16 @@ function loadProjectFile() {
 
   try {
     // try pre-5.0 cordova structure
-    platform_ios = context.requireCordovaModule('cordova-lib/src/plugman/platforms')['ios'];
+    platform_ios = context.require('cordova-lib/src/plugman/platforms')['ios'];
     projectFile = platform_ios.parseProjectFile(iosPlatformPath);
   } catch (e) {
       try {
           // let's try cordova 5.0 structure
-          platform_ios = context.requireCordovaModule('cordova-lib/src/plugman/platforms/ios');
+          platform_ios = context.require('cordova-lib/src/plugman/platforms/ios');
           projectFile = platform_ios.parseProjectFile(iosPlatformPath);
       } catch (e) {
           // Then cordova 7.0
-          var project_files = context.requireCordovaModule('glob')
+          var project_files = context.require('glob')
             .sync(path.join(iosPlatformPath, '*.xcodeproj', 'project.pbxproj'));
 
           if (project_files.length === 0) {
@@ -91,24 +91,24 @@ function loadProjectFile() {
 
           var pbxPath = project_files[0];
 
-          var xcodeproj = context.requireCordovaModule('xcode').project(pbxPath);
+          var xcodeproj = context.require('xcode').project(pbxPath);
           xcodeproj.parseSync();
 
           projectFile = {
               'xcode': xcodeproj,
               write: function () {
-                  var fs = context.requireCordovaModule('fs');
+                  var fs = context.require('fs');
 
               var frameworks_file = path.join(iosPlatformPath, 'frameworks.json');
               var frameworks = {};
               try {
-                  frameworks = context.requireCordovaModule(frameworks_file);
+                  frameworks = context.require(frameworks_file);
               } catch (e) { }
 
               fs.writeFileSync(pbxPath, xcodeproj.writeSync());
                   if (Object.keys(frameworks).length === 0) {
                       // If there is no framework references remain in the project, just remove this file
-                      context.requireCordovaModule('shelljs').rm('-rf', frameworks_file);
+                      context.require('shelljs').rm('-rf', frameworks_file);
                       return;
                   }
                   fs.writeFileSync(frameworks_file, JSON.stringify(this.frameworks, null, 4));
@@ -129,16 +129,16 @@ function loadProjectFile() {
  * @return {String} name of the project
  */
 function getProjectName(ctx, projectRoot) {
-  var cordova_util = ctx.requireCordovaModule('cordova-lib/src/cordova/util');
+  var cordova_util = ctx.require('cordova-lib/src/cordova/util');
   var xml = cordova_util.projectConfig(projectRoot);
   var ConfigParser;
 
   // If we are running Cordova 5.4 or abova - use parser from cordova-common.
   // Otherwise - from cordova-lib.
   try {
-    ConfigParser = ctx.requireCordovaModule('cordova-common/src/ConfigParser/ConfigParser');
+    ConfigParser = ctx.require('cordova-common/src/ConfigParser/ConfigParser');
   } catch (e) {
-    ConfigParser = ctx.requireCordovaModule('cordova-lib/src/configparser/ConfigParser')
+    ConfigParser = ctx.require('cordova-lib/src/configparser/ConfigParser')
   }
 
   return new ConfigParser(xml).name();
