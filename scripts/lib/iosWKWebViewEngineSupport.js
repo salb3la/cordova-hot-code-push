@@ -13,7 +13,6 @@ var WKWEBVIEW_MACRO = 'WK_WEBVIEW_ENGINE_IS_USED';
 var isWkWebViewEngineUsed = 0;
 var context;
 var projectRoot;
-var projectName;
 var iosPlatformPath;
 
 module.exports = {
@@ -44,7 +43,6 @@ function setWKWebViewEngineMacro(cordovaContext) {
 function init(ctx) {
   context = ctx;
   projectRoot = ctx.opts.projectRoot;
-  projectName = getProjectName(ctx, projectRoot);
   iosPlatformPath = path.join(projectRoot, 'platforms', 'ios');
 
   var wkWebViewPluginPath = path.join(projectRoot, 'plugins', WKWEBVIEW_PLUGIN_NAME);
@@ -118,31 +116,7 @@ function loadProjectFile() {
   }
 
   return projectFile;
-}    
-
-/**
- * Get name of the current project.
- *
- * @param {Object} ctx - cordova context instance
- * @param {String} projectRoot - current root of the project
- *
- * @return {String} name of the project
- */
-function getProjectName(ctx, projectRoot) {
-  var cordova_util = require('cordova-lib/src/cordova/util');
-  var xml = cordova_util.projectConfig(projectRoot);
-  var ConfigParser;
-
-  // If we are running Cordova 5.4 or abova - use parser from cordova-common.
-  // Otherwise - from cordova-lib.
-  try {
-    ConfigParser = require('cordova-common/src/ConfigParser/ConfigParser');
-  } catch (e) {
-    ConfigParser = require('cordova-lib/src/configparser/ConfigParser')
-  }
-
-  return new ConfigParser(xml).name();
-}
+} 
 
 /**
  * Remove comments from the file.
