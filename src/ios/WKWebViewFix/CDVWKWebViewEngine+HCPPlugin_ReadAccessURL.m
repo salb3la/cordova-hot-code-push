@@ -4,8 +4,6 @@
 //  Created by Nikolay Demyankov on 04.04.16.
 //
 
-#if WK_WEBVIEW_ENGINE_IS_USED
-
 #import "CDVWKWebViewEngine+HCPPlugin_ReadAccessURL.h"
 #import <objc/message.h>
 #import "HCPFilesStructure.h"
@@ -79,5 +77,3 @@
 }
 
 @end
-
-#endif
